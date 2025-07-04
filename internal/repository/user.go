@@ -44,3 +44,11 @@ func (r *repository) Create(ctx context.Context, user *model.User) error {
 
 	return nil
 }
+
+func (r *repository) GetByUsername(ctx context.Context, username string) (*model.User, error) {
+	return nil, nil
+}
+
+func (r *repository) Delete(ctx context.Context, id string) error {
+	return nil
+}

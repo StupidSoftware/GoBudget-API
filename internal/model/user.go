@@ -11,7 +11,7 @@ import (
 type User struct {
 	ID        uuid.UUID `json:"id"`
 	Username  string    `json:"username" validate:"required,min=3,max=20"`
-	Password  string    `json:"password" validate:"required,min=12"`
+	Password  string    `json:"password" validate:"required,min=12,max=144"`
 	CreatedAt time.Time `json:"created_at"`
 	Balance   int64     `json:"balance"`
 }
