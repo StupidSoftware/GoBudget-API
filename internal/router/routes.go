@@ -1,16 +1,32 @@
 package router
 
 import (
+	"github.com/breno5g/GoBudget/config"
+	"github.com/breno5g/GoBudget/internal/controller"
+	"github.com/breno5g/GoBudget/internal/repository"
+	"github.com/breno5g/GoBudget/internal/service"
 	"github.com/gin-gonic/gin"
 )
 
 func initializeRoutes(r *gin.Engine) {
 	v1 := r.Group("/api/v1")
 	{
-		v1.GET("/ping", (func(c *gin.Context) {
-			c.JSON(200, gin.H{
-				"message": "pong",
-			})
-		}))
+		userRoutes(v1)
 	}
+}
+
+func userRoutes(r *gin.RouterGroup) *gin.RouterGroup {
+	db := config.GetDB()
+	repo := repository.NewRepository(db)
+	svc := service.NewUserService(repo)
+	ctrl := controller.NewUserController(svc)
+
+	users := r.Group("/users") // <-- agora usamos o grupo
+	{
+		users.POST("/", ctrl.Create)
+		// users.GET("/:username", ctrl.GetByUsername)
+		// users.DELETE("/:id", ctrl.Delete)
+	}
+
+	return users
 }
