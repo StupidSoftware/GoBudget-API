@@ -1,4 +1,4 @@
-.PHONY: run build test lint clean env
+.PHONY: run build test lint clean env dev logs logs-api logs-db
 .ALL: run
 
 APP_NAME=GoBudget
@@ -30,3 +30,18 @@ env:
 	@echo ">> Showing environment variables from $(ENV_FILE)"
 	@cat $(ENV_FILE)
 
+dev:
+	@echo ">> Starting development environment with Docker Compose..."
+	@docker-compose up --build --remove-orphans --force-recreate -d
+
+logs:
+	@echo ">> Tailing logs from docker-compose (press Ctrl+C to exit)"
+	@docker-compose logs -f
+
+logs-api:
+	@echo ">> Tailing logs from API service (Ctrl+C to exit)"
+	@docker-compose logs -f api
+
+logs-db:
+	@echo ">> Tailing logs from DB service (Ctrl+C to exit)"
+	@docker-compose logs -f postgres

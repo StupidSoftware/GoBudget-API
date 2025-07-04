@@ -1,0 +1,41 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: gobudget_postgres
+    restart: always
+    env_file:
+      - .env
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - gobudget_net
+
+  api:
+    container_name: gobudget_api
+    image: golang:1.24-alpine
+    working_dir: /app
+    command: ["sh", "-c", "go install github.com/air-verse/air@latest && air"]
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    ports:
+      - "${WEB_SERVER_PORT}:3333"
+    depends_on:
+      - postgres
+    networks:
+      - gobudget_net
+    tty: true
+
+volumes:
+  pgdata:
+
+networks:
+  gobudget_net:
+    driver: bridge
