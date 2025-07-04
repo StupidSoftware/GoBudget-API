@@ -32,6 +32,9 @@ services:
     networks:
       - gobudget_net
     tty: true
+    stdin_open: true
+    environment:
+      - CGO_ENABLED=0
 
 volumes:
   pgdata:

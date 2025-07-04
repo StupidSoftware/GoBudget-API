@@ -1,16 +1,16 @@
-# .air.toml
-
 root = "."
 tmp_dir = "tmp"
 
 [build]
-  cmd = "go build -o ./tmp/main ./cmd/server"
+  cmd = "go build -o tmp/main ./cmd/server/main.go"
   bin = "tmp/main"
-  full_bin = "false"
-  exclude_dir = ["vendor", "tmp"]
-
-[log]
-  time = true
+  pre_cmd = "rm -f tmp/main" # 💥 Limpa binário antes do build
+  full_bin = false
+  exclude_dir = ["tmp", "vendor"]
+  include_ext = ["go"]
 
 [run]
   cmd = "./tmp/main"
+
+[log]
+  time = true
