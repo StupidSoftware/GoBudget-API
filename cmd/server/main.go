@@ -1,11 +1,8 @@
 package server
 
 import (
-	"time"
-
 	"github.com/breno5g/GoBudget/config"
-	"github.com/breno5g/GoBudget/internal/model"
-	"github.com/google/uuid"
+	"github.com/gin-gonic/gin"
 )
 
 func Execute() {
@@ -16,17 +13,14 @@ func Execute() {
 		panic(err)
 	}
 
-	var transaction model.Transaction
+	PORT := config.GetEnv().WebServerPort
+	logger.Infof("Starting server on port %s", PORT)
 
-	transaction.ID = uuid.New()
-	transaction.UserID = uuid.New()
-	transaction.CategoryID = uuid.New()
-	transaction.Description = "Test"
-	transaction.Amount = 100
-	transaction.Type = model.Income
-	transaction.Date = time.Now()
-	transaction.CreatedAt = time.Now()
-
-	logger.Debug(transaction)
-
+	r := gin.Default()
+	r.GET("/ping", func(c *gin.Context) {
+		c.JSON(200, gin.H{
+			"message": "pong",
+		})
+	})
+	r.Run(":" + PORT)
 }
