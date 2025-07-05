@@ -16,14 +16,45 @@ type User struct {
 	Balance   int64     `json:"balance"`
 }
 
-func (u *User) Validate() error {
-	validate := validator.New()
-	err := validate.Struct(u)
-	if err != nil {
-		return err
+type ValidationErrorResponse struct {
+	Field   string `json:"field"`
+	Message string `json:"message"`
+}
+
+func formatValidationError(fe validator.FieldError) ValidationErrorResponse {
+	var msg string
+
+	switch fe.Tag() {
+	case "required":
+		msg = fe.Param() + " is required"
+	case "min":
+		msg = fe.Field() + " to be at least " + fe.Param() + " characters long"
+	case "max":
+		msg = fe.Field() + " to be at most " + fe.Param() + " characters long"
+	default:
+		msg = fe.Error()
 	}
 
-	return nil
+	return ValidationErrorResponse{
+		Field:   fe.Field(),
+		Message: msg,
+	}
+}
+
+func (u *User) Validate() []ValidationErrorResponse {
+	validate := validator.New()
+	err := validate.Struct(u)
+
+	if err == nil {
+		return nil
+	}
+
+	var errs []ValidationErrorResponse
+	for _, e := range err.(validator.ValidationErrors) {
+		errs = append(errs, formatValidationError(e))
+	}
+
+	return errs
 }
 
 func (u *User) ComparePassword(password string) bool {

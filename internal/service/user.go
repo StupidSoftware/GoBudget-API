@@ -1,13 +1,15 @@
 package service
 
 import (
-	"context"
 	"errors"
 	"time"
 
 	"github.com/breno5g/GoBudget/internal/model"
 	"github.com/breno5g/GoBudget/internal/repository"
+	"github.com/breno5g/GoBudget/internal/utils"
+	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 var (
@@ -15,9 +17,9 @@ var (
 )
 
 type UserService interface {
-	Create(ctx context.Context, user *model.User) error
-	GetByUsername(ctx context.Context, username string) (*model.User, error)
-	Delete(ctx context.Context, id string) error
+	Create(ctx *gin.Context, user *model.User) *utils.CustomError
+	GetByUsername(ctx *gin.Context, username string) (*model.User, error)
+	Delete(ctx *gin.Context, id string) error
 }
 
 type service struct {
@@ -30,28 +32,45 @@ func NewUserService(repo repository.UserRepository) *service {
 	}
 }
 
-func (s *service) Create(ctx context.Context, user *model.User) error {
-	err := user.Validate()
-	if err != nil {
-		return err
+func (s *service) Create(ctx *gin.Context, user *model.User) *utils.CustomError {
+	if err := user.Validate(); err != nil {
+		return &utils.CustomError{
+			Message: err[0].Message,
+			Code:    400,
+			Err:     errors.New(err[0].Message),
+		}
 	}
 
 	user.ID = uuid.New()
 	user.CreatedAt = time.Now()
 	user.HashPassword(user.Password)
 
-	err = s.repo.Create(ctx, user)
-	if err != nil {
-		return err
+	if err := s.repo.Create(ctx, user); err != nil {
+		var pgxErr *pgconn.PgError
+		if errors.As(err, &pgxErr) {
+			if pgxErr.Code == "23505" {
+				return &utils.CustomError{
+					Message: "User already exists",
+					Code:    400,
+					Err:     errors.New("username already exists"),
+				}
+			}
+		}
+
+		return &utils.CustomError{
+			Message: err.Error(),
+			Code:    500,
+			Err:     err,
+		}
 	}
 
 	return nil
 }
 
-func (s *service) GetByUsername(ctx context.Context, username string) (*model.User, error) {
+func (s *service) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
 	return s.repo.GetByUsername(ctx, username)
 }
 
-func (s *service) Delete(ctx context.Context, id string) error {
+func (s *service) Delete(ctx *gin.Context, id string) error {
 	return s.repo.Delete(ctx, id)
 }

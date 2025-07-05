@@ -1,16 +1,15 @@
 package repository
 
 import (
-	"context"
-
 	"github.com/breno5g/GoBudget/internal/model"
+	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 type UserRepository interface {
-	Create(ctx context.Context, user *model.User) error
-	GetByUsername(ctx context.Context, username string) (*model.User, error)
-	Delete(ctx context.Context, id string) error
+	Create(ctx *gin.Context, user *model.User) error
+	GetByUsername(ctx *gin.Context, username string) (*model.User, error)
+	Delete(ctx *gin.Context, id string) error
 }
 
 type repository struct {
@@ -23,7 +22,7 @@ func NewRepository(db *pgxpool.Pool) *repository {
 	}
 }
 
-func (r *repository) Create(ctx context.Context, user *model.User) error {
+func (r *repository) Create(ctx *gin.Context, user *model.User) error {
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
 		return err
@@ -45,10 +44,10 @@ func (r *repository) Create(ctx context.Context, user *model.User) error {
 	return nil
 }
 
-func (r *repository) GetByUsername(ctx context.Context, username string) (*model.User, error) {
+func (r *repository) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
 	return nil, nil
 }
 
-func (r *repository) Delete(ctx context.Context, id string) error {
+func (r *repository) Delete(ctx *gin.Context, id string) error {
 	return nil
 }

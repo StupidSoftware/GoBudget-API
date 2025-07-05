@@ -1,10 +1,13 @@
 package controller
 
 import (
+	"github.com/breno5g/GoBudget/config"
 	"github.com/breno5g/GoBudget/internal/model"
 	"github.com/breno5g/GoBudget/internal/service"
 	"github.com/gin-gonic/gin"
 )
+
+var logger = config.GetLogger("controller")
 
 type UserController interface {
 	Create(ctx *gin.Context)
@@ -24,18 +27,18 @@ func NewUserController(svc service.UserService) *controller {
 
 func (c *controller) Create(ctx *gin.Context) {
 	var user model.User
-	err := ctx.BindJSON(&user)
-	if err != nil {
+
+	if err := ctx.BindJSON(&user); err != nil {
 		ctx.JSON(400, gin.H{
 			"error": "Invalid request body",
 		})
 		return
 	}
 
-	err = c.svc.Create(ctx, &user)
-	if err != nil {
-		ctx.JSON(500, gin.H{
-			"error": "Failed to create user",
+	if err := c.svc.Create(ctx, &user); err != nil {
+		logger.Errorf("Error creating user: %v", err)
+		ctx.JSON(err.Code, gin.H{
+			"error": err.Message,
 		})
 		return
 	}
