@@ -3,6 +3,7 @@ package config
 import (
 	"fmt"
 
+	"github.com/go-playground/validator/v10"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -10,6 +11,7 @@ var (
 	db     *pgxpool.Pool
 	logger *Logger
 	cfg    *conf
+	v      *validator.Validate
 )
 
 func Init() error {
@@ -25,6 +27,8 @@ func Init() error {
 		return fmt.Errorf("error initializing postgres: %v", err)
 	}
 
+	v = NewValidator()
+
 	return nil
 }
 
@@ -39,4 +43,8 @@ func GetLogger(prefix string) *Logger {
 
 func GetDB() *pgxpool.Pool {
 	return db
+}
+
+func GetValidator() *validator.Validate {
+	return v
 }

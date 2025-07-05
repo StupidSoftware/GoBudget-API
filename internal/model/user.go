@@ -3,6 +3,7 @@ package model
 import (
 	"time"
 
+	"github.com/breno5g/GoBudget/config"
 	"github.com/go-playground/validator/v10"
 	"github.com/google/uuid"
 	"golang.org/x/crypto/bcrypt"
@@ -11,7 +12,7 @@ import (
 type User struct {
 	ID        uuid.UUID `json:"id"`
 	Username  string    `json:"username" validate:"required,min=3,max=20"`
-	Password  string    `json:"password" validate:"required,min=12,max=144"`
+	Password  string    `json:"password" validate:"required,str_pswd"`
 	CreatedAt time.Time `json:"created_at"`
 	Balance   int64     `json:"balance"`
 }
@@ -31,6 +32,8 @@ func formatValidationError(fe validator.FieldError) ValidationErrorResponse {
 		msg = fe.Field() + " to be at least " + fe.Param() + " characters long"
 	case "max":
 		msg = fe.Field() + " to be at most " + fe.Param() + " characters long"
+	case "str_pswd":
+		msg = "password has to be between 12 and 144 characters long and contain at least one uppercase letter and one special character"
 	default:
 		msg = fe.Error()
 	}
@@ -42,7 +45,7 @@ func formatValidationError(fe validator.FieldError) ValidationErrorResponse {
 }
 
 func (u *User) Validate() []ValidationErrorResponse {
-	validate := validator.New()
+	validate := config.GetValidator()
 	err := validate.Struct(u)
 
 	if err == nil {
