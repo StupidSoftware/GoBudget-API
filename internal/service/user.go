@@ -22,17 +22,17 @@ type UserService interface {
 	Delete(ctx *gin.Context, id string) error
 }
 
-type service struct {
+type userService struct {
 	repo repository.UserRepository
 }
 
-func NewUserService(repo repository.UserRepository) *service {
-	return &service{
+func NewUserService(repo repository.UserRepository) *userService {
+	return &userService{
 		repo: repo,
 	}
 }
 
-func (s *service) Create(ctx *gin.Context, user *model.User) *utils.CustomError {
+func (s *userService) Create(ctx *gin.Context, user *model.User) *utils.CustomError {
 	if err := user.Validate(); err != nil {
 		return &utils.CustomError{
 			Message: err[0].Message,
@@ -67,7 +67,7 @@ func (s *service) Create(ctx *gin.Context, user *model.User) *utils.CustomError 
 	return nil
 }
 
-func (s *service) Login(ctx *gin.Context, user *model.User) (string, *utils.CustomError) {
+func (s *userService) Login(ctx *gin.Context, user *model.User) (string, *utils.CustomError) {
 	dbUser, err := s.repo.GetByUsername(ctx, user.Username)
 
 	if err != nil {
@@ -100,6 +100,6 @@ func (s *service) Login(ctx *gin.Context, user *model.User) (string, *utils.Cust
 
 }
 
-func (s *service) Delete(ctx *gin.Context, id string) error {
+func (s *userService) Delete(ctx *gin.Context, id string) error {
 	return s.repo.Delete(ctx, id)
 }
