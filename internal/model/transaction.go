@@ -18,12 +18,12 @@ func (t TransactionType) String() string {
 }
 
 type Transaction struct {
-	ID          uuid.UUID
-	UserID      uuid.UUID
-	CategoryID  uuid.UUID
-	Description string
-	Amount      int64
-	Type        TransactionType
-	Date        time.Time
-	CreatedAt   time.Time
+	ID          uuid.UUID       `json:"id"`
+	UserID      uuid.UUID       `json:"user_id"`
+	CategoryID  uuid.UUID       `json:"category_id"`
+	Description string          `json:"description"`
+	Amount      int64           `json:"amount"`
+	Type        TransactionType `json:"type"`
+	Date        time.Time       `json:"date"`
+	CreatedAt   time.Time       `json:"created_at"`
 }
