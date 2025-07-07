@@ -11,6 +11,7 @@ type CategoryRepository interface {
 	GetAll(ctx *gin.Context) ([]*model.Category, error)
 	GetByID(ctx *gin.Context, id int) (*model.Category, error)
 	Delete(ctx *gin.Context, id int) error
+	GetByUserID(ctx *gin.Context, userID string) ([]*model.Category, error)
 }
 
 type categoryRepository struct {
@@ -43,6 +44,29 @@ func (r *categoryRepository) Create(ctx *gin.Context, category *model.Category) 
 	}
 
 	return nil
+}
+
+func (r *categoryRepository) GetByUserID(ctx *gin.Context, userID string) ([]*model.Category, error) {
+	var categories []*model.Category
+
+	rows, err := r.db.Query(ctx, "SELECT id, name, user_id FROM categories WHERE user_id = $1", userID)
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var category model.Category
+		err := rows.Scan(&category.ID, &category.Name, &category.UserID)
+		if err != nil {
+			return nil, err
+		}
+
+		categories = append(categories, &category)
+	}
+
+	return categories, nil
 }
 
 func (r *categoryRepository) GetAll(ctx *gin.Context) ([]*model.Category, error) {
