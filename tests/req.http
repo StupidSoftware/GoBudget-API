@@ -29,8 +29,8 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "name": "Cumida",
-  "user_id": "1a8f7a16-1eee-4fe6-9414-359416b54dbb"
+  "name": "Vou de taxi 2s"
+  # "user_id": "1a8f7a16-1eee-4fe6-9414-359416b54dbb"
 }
 
 ### Get Categories

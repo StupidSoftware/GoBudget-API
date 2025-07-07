@@ -49,7 +49,7 @@ func (r *categoryRepository) Create(ctx *gin.Context, category *model.Category) 
 func (r *categoryRepository) GetByUserID(ctx *gin.Context, userID string) ([]*model.Category, error) {
 	var categories []*model.Category
 
-	rows, err := r.db.Query(ctx, "SELECT id, name, user_id FROM categories WHERE user_id = $1", userID)
+	rows, err := r.db.Query(ctx, "SELECT id, name, user_id FROM categories WHERE user_id = $1 OR user_id IS NULL", userID)
 	if err != nil {
 		return nil, err
 	}
