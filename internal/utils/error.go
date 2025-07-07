@@ -15,14 +15,14 @@ type CustomError struct {
 func NewCustomPGError(message string, code int, err error) *CustomError {
 	var pgxErr *pgconn.PgError
 	if errors.As(err, &pgxErr) {
-		if pgxErr.Code == "23503" {
+		switch pgxErr.Code {
+		case "23503":
 			return &CustomError{
 				Message: message,
 				Code:    code,
 				Err:     err,
 			}
-		}
-		if pgxErr.Code == "23505" {
+		case "23505":
 			return &CustomError{
 				Message: message,
 				Code:    code,
