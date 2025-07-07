@@ -9,7 +9,6 @@ import (
 	"github.com/breno5g/GoBudget/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
 )
 
 var (
@@ -46,22 +45,7 @@ func (s *userService) Create(ctx *gin.Context, user *model.User) *utils.CustomEr
 	user.HashPassword(user.Password)
 
 	if err := s.repo.Create(ctx, user); err != nil {
-		var pgxErr *pgconn.PgError
-		if errors.As(err, &pgxErr) {
-			if pgxErr.Code == "23505" {
-				return &utils.CustomError{
-					Message: "User already exists",
-					Code:    400,
-					Err:     errors.New("username already exists"),
-				}
-			}
-		}
-
-		return &utils.CustomError{
-			Message: err.Error(),
-			Code:    500,
-			Err:     err,
-		}
+		return utils.NewCustomPGError("user already exists", 409, err)
 	}
 
 	return nil
@@ -70,20 +54,16 @@ func (s *userService) Create(ctx *gin.Context, user *model.User) *utils.CustomEr
 func (s *userService) Login(ctx *gin.Context, user *model.User) (string, *utils.CustomError) {
 	dbUser, err := s.repo.GetByUsername(ctx, user.Username)
 
+	userNotFound := utils.NewCustomPGError("User not found", 404, errors.New("user not found"))
+
 	if err != nil {
-		return "", &utils.CustomError{
-			Message: "User not found",
-			Code:    404,
-			Err:     errors.New("user not found"),
-		}
+		userNotFound.Err = err
+		return "", userNotFound
 	}
 
 	if !user.ComparePassword(dbUser.Password) {
-		return "", &utils.CustomError{
-			Message: "User not found",
-			Code:    404,
-			Err:     errors.New("user not found"),
-		}
+		userNotFound.Err = err
+		return "", userNotFound
 	}
 
 	token, err := utils.GenerateToken(dbUser.ID.String())

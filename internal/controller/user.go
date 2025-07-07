@@ -37,9 +37,7 @@ func (c *controller) Create(ctx *gin.Context) {
 
 	if err := c.svc.Create(ctx, &user); err != nil {
 		logger.Errorf("Error creating user: %v", err)
-		ctx.JSON(err.Code, gin.H{
-			"error": err.Message,
-		})
+		ctx.JSON(err.Code, err)
 		return
 	}
 

@@ -34,9 +34,7 @@ func (c *categoryController) Create(ctx *gin.Context) {
 
 	if err := c.svc.Create(ctx, &category); err != nil {
 		logger.Errorf("Error creating category: %v", err)
-		ctx.JSON(err.Code, gin.H{
-			"error": err.Message,
-		})
+		ctx.JSON(err.Code, err)
 		return
 	}
 
@@ -49,9 +47,7 @@ func (c *categoryController) GetByUserID(ctx *gin.Context) {
 	categories, err := c.svc.GetByUserID(ctx)
 	if err != nil {
 		logger.Errorf("Error getting categories: %v", err)
-		ctx.JSON(err.Code, gin.H{
-			"error": err.Message,
-		})
+		ctx.JSON(err.Code, err)
 		return
 	}
 

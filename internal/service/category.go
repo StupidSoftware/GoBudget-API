@@ -3,13 +3,15 @@ package service
 import (
 	"errors"
 
+	"github.com/breno5g/GoBudget/config"
 	"github.com/breno5g/GoBudget/internal/model"
 	"github.com/breno5g/GoBudget/internal/repository"
 	"github.com/breno5g/GoBudget/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
-	"github.com/jackc/pgx/v5/pgconn"
 )
+
+var logger = config.GetLogger("service")
 
 type CategoryService interface {
 	Create(ctx *gin.Context, category *model.Category) *utils.CustomError
@@ -42,28 +44,13 @@ func (c *categoryService) Create(ctx *gin.Context, category *model.Category) *ut
 	if exists {
 		return &utils.CustomError{
 			Message: "Category already exists",
-			Code:    400,
+			Code:    409,
 			Err:     errors.New("category already exists"),
 		}
 	}
 
 	if err := c.repo.Create(ctx, category); err != nil {
-		var pgxErr *pgconn.PgError
-		if errors.As(err, &pgxErr) {
-			if pgxErr.Code == "23503" {
-				return &utils.CustomError{
-					Message: "User not found",
-					Code:    404,
-					Err:     errors.New("user not found"),
-				}
-			}
-		}
-
-		return &utils.CustomError{
-			Message: err.Error(),
-			Code:    500,
-			Err:     err,
-		}
+		return utils.NewCustomPGError("user not found", 404, err)
 	}
 
 	return nil
