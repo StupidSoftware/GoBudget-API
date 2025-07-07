@@ -22,7 +22,7 @@ Content-Type: application/json
 
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
 
-### Category
+### Create Category
 # @name create_category
 POST {{baseUrl}}/categories
 Content-Type: application/json
@@ -30,5 +30,11 @@ Authorization: Bearer {{login.response.body.token}}
 
 {
   "name": "Cumida",
-  "user_id": "b426010d-7f6f-4df1-a33f-af84e246c55e"
+  "user_id": "1a8f7a16-1eee-4fe6-9414-359416b54dbb"
 }
+
+### Get Categories
+# @name get_categories
+GET {{baseUrl}}/categories/1a8f7a16-1eee-4fe6-9414-359416b54dbb
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}

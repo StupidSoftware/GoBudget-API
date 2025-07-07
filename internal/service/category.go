@@ -13,6 +13,7 @@ import (
 
 type CategoryService interface {
 	Create(ctx *gin.Context, category *model.Category) *utils.CustomError
+	GetByUserID(ctx *gin.Context) ([]*model.Category, *utils.CustomError)
 }
 
 type categoryService struct {
@@ -48,4 +49,27 @@ func (c *categoryService) Create(ctx *gin.Context, category *model.Category) *ut
 	}
 
 	return nil
+}
+
+func (c *categoryService) GetByUserID(ctx *gin.Context) ([]*model.Category, *utils.CustomError) {
+	userID := ctx.Param("user_id")
+
+	if userID == "" {
+		return nil, &utils.CustomError{
+			Message: "user id is required",
+			Code:    400,
+			Err:     errors.New("user id is required"),
+		}
+	}
+
+	categories, err := c.repo.GetByUserID(ctx, userID)
+	if err != nil {
+		return nil, &utils.CustomError{
+			Message: err.Error(),
+			Code:    500,
+			Err:     err,
+		}
+	}
+
+	return categories, nil
 }

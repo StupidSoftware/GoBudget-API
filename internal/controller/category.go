@@ -8,8 +8,7 @@ import (
 
 type CategoryController interface {
 	Create(ctx *gin.Context)
-	Login(ctx *gin.Context)
-	Delete(ctx *gin.Context)
+	GetByUserID(ctx *gin.Context)
 }
 
 type categoryController struct {
@@ -44,4 +43,17 @@ func (c *categoryController) Create(ctx *gin.Context) {
 	ctx.JSON(201, gin.H{
 		"message": "Category created",
 	})
+}
+
+func (c *categoryController) GetByUserID(ctx *gin.Context) {
+	categories, err := c.svc.GetByUserID(ctx)
+	if err != nil {
+		logger.Errorf("Error getting categories: %v", err)
+		ctx.JSON(err.Code, gin.H{
+			"error": err.Message,
+		})
+		return
+	}
+
+	ctx.JSON(200, categories)
 }
