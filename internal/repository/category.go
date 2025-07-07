@@ -8,9 +8,6 @@ import (
 
 type CategoryRepository interface {
 	Create(ctx *gin.Context, category *model.Category) error
-	GetAll(ctx *gin.Context) ([]*model.Category, error)
-	GetByID(ctx *gin.Context, id int) (*model.Category, error)
-	Delete(ctx *gin.Context, id int) error
 	GetByUserID(ctx *gin.Context, userID string) ([]*model.Category, error)
 	CategoryAlreadyExists(ctx *gin.Context, category *model.Category) (bool, error)
 }
@@ -78,16 +75,4 @@ func (r *categoryRepository) CategoryAlreadyExists(ctx *gin.Context, category *m
 	}
 
 	return count > 0, nil
-}
-
-func (r *categoryRepository) GetAll(ctx *gin.Context) ([]*model.Category, error) {
-	return nil, nil
-}
-
-func (r *categoryRepository) GetByID(ctx *gin.Context, id int) (*model.Category, error) {
-	return nil, nil
-}
-
-func (r *categoryRepository) Delete(ctx *gin.Context, id int) error {
-	return nil
 }
