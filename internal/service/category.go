@@ -29,6 +29,24 @@ func NewCategoryService(repo repository.CategoryRepository) *categoryService {
 func (c *categoryService) Create(ctx *gin.Context, category *model.Category) *utils.CustomError {
 	category.ID = uuid.New()
 
+	exists, err := c.repo.CategoryAlreadyExists(ctx, category)
+
+	if err != nil {
+		return &utils.CustomError{
+			Message: err.Error(),
+			Code:    500,
+			Err:     err,
+		}
+	}
+
+	if exists {
+		return &utils.CustomError{
+			Message: "Category already exists",
+			Code:    400,
+			Err:     errors.New("category already exists"),
+		}
+	}
+
 	if err := c.repo.Create(ctx, category); err != nil {
 		var pgxErr *pgconn.PgError
 		if errors.As(err, &pgxErr) {

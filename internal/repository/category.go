@@ -12,6 +12,7 @@ type CategoryRepository interface {
 	GetByID(ctx *gin.Context, id int) (*model.Category, error)
 	Delete(ctx *gin.Context, id int) error
 	GetByUserID(ctx *gin.Context, userID string) ([]*model.Category, error)
+	CategoryAlreadyExists(ctx *gin.Context, category *model.Category) (bool, error)
 }
 
 type categoryRepository struct {
@@ -67,6 +68,16 @@ func (r *categoryRepository) GetByUserID(ctx *gin.Context, userID string) ([]*mo
 	}
 
 	return categories, nil
+}
+
+func (r *categoryRepository) CategoryAlreadyExists(ctx *gin.Context, category *model.Category) (bool, error) {
+	var count int
+	err := r.db.QueryRow(ctx, "SELECT COUNT(*) FROM categories WHERE name = $1 AND user_id = $2 OR name = $1 AND user_id IS NULL", category.Name, category.UserID).Scan(&count)
+	if err != nil {
+		return false, err
+	}
+
+	return count > 0, nil
 }
 
 func (r *categoryRepository) GetAll(ctx *gin.Context) ([]*model.Category, error) {
