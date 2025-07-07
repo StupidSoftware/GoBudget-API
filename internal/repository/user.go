@@ -45,7 +45,16 @@ func (r *repository) Create(ctx *gin.Context, user *model.User) error {
 }
 
 func (r *repository) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
-	return nil, nil
+	var user model.User
+
+	err := r.db.QueryRow(ctx, "SELECT id, username, password, created_at, balance FROM users WHERE username = $1", username).Scan(
+		&user.ID, &user.Username, &user.Password, &user.CreatedAt, &user.Balance)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &user, nil
 }
 
 func (r *repository) Delete(ctx *gin.Context, id string) error {
