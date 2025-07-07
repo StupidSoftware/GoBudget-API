@@ -11,8 +11,8 @@ import (
 
 type User struct {
 	ID        uuid.UUID `json:"id"`
-	Username  string    `json:"username" validate:"required,min=3,max=20"`
-	Password  string    `json:"password" validate:"required,str_pswd"`
+	Username  string    `json:"username" validate:"required,min=3,max=20" binding:"required"`
+	Password  string    `json:"password" validate:"required,str_pswd" binding:"required"`
 	CreatedAt time.Time `json:"created_at"`
 	Balance   int64     `json:"balance"`
 }
@@ -61,7 +61,7 @@ func (u *User) Validate() []ValidationErrorResponse {
 }
 
 func (u *User) ComparePassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	err := bcrypt.CompareHashAndPassword([]byte(password), []byte(u.Password))
 	return err == nil
 }
 

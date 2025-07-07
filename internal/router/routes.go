@@ -21,10 +21,10 @@ func userRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 	svc := service.NewUserService(repo)
 	ctrl := controller.NewUserController(svc)
 
-	users := r.Group("/users") // <-- agora usamos o grupo
+	users := r.Group("/users")
 	{
 		users.POST("/", ctrl.Create)
-		// users.GET("/:username", ctrl.GetByUsername)
+		users.GET("/login", ctrl.Login)
 		// users.DELETE("/:id", ctrl.Delete)
 	}
 

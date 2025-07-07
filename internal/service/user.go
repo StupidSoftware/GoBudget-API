@@ -18,7 +18,7 @@ var (
 
 type UserService interface {
 	Create(ctx *gin.Context, user *model.User) *utils.CustomError
-	GetByUsername(ctx *gin.Context, username string) (*model.User, error)
+	Login(ctx *gin.Context, user *model.User) (*model.User, *utils.CustomError)
 	Delete(ctx *gin.Context, id string) error
 }
 
@@ -67,8 +67,26 @@ func (s *service) Create(ctx *gin.Context, user *model.User) *utils.CustomError 
 	return nil
 }
 
-func (s *service) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
-	return s.repo.GetByUsername(ctx, username)
+func (s *service) Login(ctx *gin.Context, user *model.User) (*model.User, *utils.CustomError) {
+	dbUser, err := s.repo.GetByUsername(ctx, user.Username)
+
+	if err != nil {
+		return nil, &utils.CustomError{
+			Message: "User not found",
+			Code:    404,
+			Err:     errors.New("user not found"),
+		}
+	}
+
+	if !user.ComparePassword(dbUser.Password) {
+		return nil, &utils.CustomError{
+			Message: "User not found",
+			Code:    404,
+			Err:     errors.New("user not found"),
+		}
+	}
+
+	return dbUser, nil
 }
 
 func (s *service) Delete(ctx *gin.Context, id string) error {
