@@ -52,9 +52,9 @@ func (c *categoryService) Create(ctx *gin.Context, category *model.Category) *ut
 }
 
 func (c *categoryService) GetByUserID(ctx *gin.Context) ([]*model.Category, *utils.CustomError) {
-	userID := ctx.Param("user_id")
+	userID, ok := ctx.Get("user_id")
 
-	if userID == "" {
+	if !ok {
 		return nil, &utils.CustomError{
 			Message: "user id is required",
 			Code:    400,
@@ -62,7 +62,7 @@ func (c *categoryService) GetByUserID(ctx *gin.Context) ([]*model.Category, *uti
 		}
 	}
 
-	categories, err := c.repo.GetByUserID(ctx, userID)
+	categories, err := c.repo.GetByUserID(ctx, userID.(string))
 	if err != nil {
 		return nil, &utils.CustomError{
 			Message: err.Error(),

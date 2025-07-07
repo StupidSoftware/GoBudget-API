@@ -35,6 +35,6 @@ Authorization: Bearer {{login.response.body.token}}
 
 ### Get Categories
 # @name get_categories
-GET {{baseUrl}}/categories/1a8f7a16-1eee-4fe6-9414-359416b54dbb
+GET {{baseUrl}}/categories
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}

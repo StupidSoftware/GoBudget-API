@@ -42,7 +42,7 @@ func categoryRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 		categories.Use(middleware.AuthRequired())
 		{
 			categories.POST("/", ctrl.Create)
-			categories.GET("/:user_id", ctrl.GetByUserID)
+			categories.GET("/", ctrl.GetByUserID)
 		}
 	}
 
