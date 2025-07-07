@@ -14,7 +14,7 @@ CREATE TABLE "users" (
 CREATE TABLE "categories" (
   "id" UUID PRIMARY KEY NOT NULL,
   "name" VARCHAR(46) NOT NULL,
-  "user_id" UUID NOT NULL,
+  "user_id" UUID,
   FOREIGN KEY ("user_id") REFERENCES "users" ("id")
 );
 
