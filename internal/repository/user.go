@@ -12,17 +12,17 @@ type UserRepository interface {
 	Delete(ctx *gin.Context, id string) error
 }
 
-type repository struct {
+type userRepository struct {
 	db *pgxpool.Pool
 }
 
-func NewRepository(db *pgxpool.Pool) *repository {
-	return &repository{
+func NewUserRepository(db *pgxpool.Pool) *userRepository {
+	return &userRepository{
 		db: db,
 	}
 }
 
-func (r *repository) Create(ctx *gin.Context, user *model.User) error {
+func (r *userRepository) Create(ctx *gin.Context, user *model.User) error {
 	tx, err := r.db.Begin(ctx)
 	if err != nil {
 		return err
@@ -44,7 +44,7 @@ func (r *repository) Create(ctx *gin.Context, user *model.User) error {
 	return nil
 }
 
-func (r *repository) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
+func (r *userRepository) GetByUsername(ctx *gin.Context, username string) (*model.User, error) {
 	var user model.User
 
 	err := r.db.QueryRow(ctx, "SELECT id, username, password, created_at, balance FROM users WHERE username = $1", username).Scan(
@@ -57,6 +57,6 @@ func (r *repository) GetByUsername(ctx *gin.Context, username string) (*model.Us
 	return &user, nil
 }
 
-func (r *repository) Delete(ctx *gin.Context, id string) error {
+func (r *userRepository) Delete(ctx *gin.Context, id string) error {
 	return nil
 }

@@ -19,7 +19,7 @@ func initializeRoutes(r *gin.Engine) {
 
 func userRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 	db := config.GetDB()
-	repo := repository.NewRepository(db)
+	repo := repository.NewUserRepository(db)
 	svc := service.NewUserService(repo)
 	ctrl := controller.NewUserController(svc)
 
@@ -32,15 +32,16 @@ func userRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 }
 
 func categoryRoutes(r *gin.RouterGroup) *gin.RouterGroup {
+	db := config.GetDB()
+	repo := repository.NewCategoryRepository(db)
+	svc := service.NewCategoryService(repo)
+	ctrl := controller.NewCategoryController(svc)
+
 	categories := r.Group("/categories")
 	{
 		categories.Use(middleware.AuthRequired())
 		{
-			categories.POST("/", func(ctx *gin.Context) {
-				ctx.JSON(200, gin.H{
-					"message": "Hello World",
-				})
-			})
+			categories.POST("/", ctrl.Create)
 		}
 	}
 

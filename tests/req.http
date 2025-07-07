@@ -30,4 +30,5 @@ Authorization: Bearer {{login.response.body.token}}
 
 {
   "name": "Cumida",
+  "user_id": "b426010d-7f6f-4df1-a33f-af84e246c55e"
 }

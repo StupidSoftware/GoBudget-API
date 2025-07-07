@@ -44,3 +44,15 @@ func (r *categoryRepository) Create(ctx *gin.Context, category *model.Category) 
 
 	return nil
 }
+
+func (r *categoryRepository) GetAll(ctx *gin.Context) ([]*model.Category, error) {
+	return nil, nil
+}
+
+func (r *categoryRepository) GetByID(ctx *gin.Context, id int) (*model.Category, error) {
+	return nil, nil
+}
+
+func (r *categoryRepository) Delete(ctx *gin.Context, id int) error {
+	return nil
+}
