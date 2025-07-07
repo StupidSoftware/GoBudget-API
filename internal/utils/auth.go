@@ -15,3 +15,16 @@ func GenerateToken(userID string) (string, error) {
 
 	return token.SignedString([]byte(config.GetEnv().JWTSecretKey))
 }
+
+func DecodeToken(tokenString string) (string, error) {
+	token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+		return []byte(config.GetEnv().JWTSecretKey), nil
+	})
+
+	if err != nil {
+		return "", err
+	}
+
+	claims := token.Claims.(jwt.MapClaims)
+	return claims["user_id"].(string), nil
+}

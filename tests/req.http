@@ -1,0 +1,32 @@
+@baseUrl = http://localhost:3333/api/v1
+
+### User 
+# @name create_user
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "username": "breno5g",
+  "password": "@SenhaTop123"
+}
+
+# @name login
+GET {{baseUrl}}/users/login
+Content-Type: application/json
+
+{
+  "username": "breno5g",
+  "password": "@SenhaTop123"
+}
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
+
+### Category
+# @name create_category
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "name": "Cumida",
+}
