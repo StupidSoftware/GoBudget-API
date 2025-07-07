@@ -31,8 +31,15 @@ func (t *transactionRepository) Create(ctx *gin.Context, transaction *model.Tran
 
 	defer tx.Rollback(ctx)
 
+	var dateValue interface{}
+	if transaction.Date.Time.IsZero() {
+		dateValue = nil
+	} else {
+		dateValue = transaction.Date.Time.Format("2006-01-02")
+	}
+
 	_, err = tx.Exec(ctx, "INSERT INTO transactions (id, user_id, category_id, description, amount, type, date) VALUES ($1, $2, $3, $4, $5, $6, $7)",
-		transaction.ID, transaction.UserID, transaction.CategoryID, transaction.Description, transaction.Amount, transaction.Type, transaction.Date)
+		transaction.ID, transaction.UserID, transaction.CategoryID, transaction.Description, transaction.Amount, transaction.Type, dateValue)
 	if err != nil {
 		return err
 	}

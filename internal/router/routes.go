@@ -14,6 +14,7 @@ func initializeRoutes(r *gin.Engine) {
 	{
 		userRoutes(v1)
 		categoryRoutes(v1)
+		transactionRoutes(v1)
 	}
 }
 
@@ -47,4 +48,21 @@ func categoryRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 	}
 
 	return categories
+}
+
+func transactionRoutes(r *gin.RouterGroup) *gin.RouterGroup {
+	db := config.GetDB()
+	repo := repository.NewTransactionRepository(db)
+	svc := service.NewTransactionService(repo)
+	ctrl := controller.NewTransactionController(svc)
+
+	transactions := r.Group("/transactions")
+	{
+		transactions.Use(middleware.AuthRequired())
+		{
+			transactions.POST("/", ctrl.Create)
+		}
+	}
+
+	return transactions
 }

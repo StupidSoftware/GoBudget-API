@@ -3,15 +3,12 @@ package service
 import (
 	"errors"
 
-	"github.com/breno5g/GoBudget/config"
 	"github.com/breno5g/GoBudget/internal/model"
 	"github.com/breno5g/GoBudget/internal/repository"
 	"github.com/breno5g/GoBudget/internal/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 )
-
-var logger = config.GetLogger("service")
 
 type CategoryService interface {
 	Create(ctx *gin.Context, category *model.Category) *utils.CustomError

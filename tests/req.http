@@ -38,3 +38,20 @@ Authorization: Bearer {{login.response.body.token}}
 GET {{baseUrl}}/categories
 Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-= #
+
+### Create Transaction
+# @name create_transaction
+POST {{baseUrl}}/transactions
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
+
+{
+  "category_id": "f211135d-41c3-43b9-9124-d4bc98c2c2dd",
+  "description": "teste",
+  "amount": 100,
+  "type": "income",
+  "date": "2024-01-01T00:00:00Z"
+}
+
