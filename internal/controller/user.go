@@ -58,7 +58,7 @@ func (c *controller) Login(ctx *gin.Context) {
 		return
 	}
 
-	loggerUser, err := c.svc.Login(ctx, &user)
+	token, err := c.svc.Login(ctx, &user)
 
 	if err != nil {
 		logger.Errorf("Error logging in: %v", err)
@@ -68,17 +68,7 @@ func (c *controller) Login(ctx *gin.Context) {
 		return
 	}
 
-	logger.Infof("User logged in: %v", loggerUser)
-
-	// if err := c.svc.Login(ctx, user.Username); err != nil {
-	// 	logger.Errorf("Error logging in: %v", err)
-	// 	ctx.JSON(err.Code, gin.H{
-	// 		"error": err.Message,
-	// 	})
-	// 	return
-	// }
-
 	ctx.JSON(200, gin.H{
-		"message": "Logged in",
+		"token": token,
 	})
 }

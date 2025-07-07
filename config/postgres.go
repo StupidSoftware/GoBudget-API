@@ -9,11 +9,11 @@ import (
 )
 
 func initPostgres() (*pgxpool.Pool, error) {
-	host := cfg.DBHost
-	port := cfg.DBPort
-	user := cfg.DBUser
-	pass := cfg.DBPassword
-	dbase := cfg.DBName
+	host := env.DBHost
+	port := env.DBPort
+	user := env.DBUser
+	pass := env.DBPassword
+	dbase := env.DBName
 
 	psqlConnStr := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable", host, port, user, pass, dbase)
 	poolConfig, err := pgxpool.ParseConfig(psqlConnStr)

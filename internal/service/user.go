@@ -18,7 +18,7 @@ var (
 
 type UserService interface {
 	Create(ctx *gin.Context, user *model.User) *utils.CustomError
-	Login(ctx *gin.Context, user *model.User) (*model.User, *utils.CustomError)
+	Login(ctx *gin.Context, user *model.User) (string, *utils.CustomError)
 	Delete(ctx *gin.Context, id string) error
 }
 
@@ -67,11 +67,11 @@ func (s *service) Create(ctx *gin.Context, user *model.User) *utils.CustomError 
 	return nil
 }
 
-func (s *service) Login(ctx *gin.Context, user *model.User) (*model.User, *utils.CustomError) {
+func (s *service) Login(ctx *gin.Context, user *model.User) (string, *utils.CustomError) {
 	dbUser, err := s.repo.GetByUsername(ctx, user.Username)
 
 	if err != nil {
-		return nil, &utils.CustomError{
+		return "", &utils.CustomError{
 			Message: "User not found",
 			Code:    404,
 			Err:     errors.New("user not found"),
@@ -79,14 +79,25 @@ func (s *service) Login(ctx *gin.Context, user *model.User) (*model.User, *utils
 	}
 
 	if !user.ComparePassword(dbUser.Password) {
-		return nil, &utils.CustomError{
+		return "", &utils.CustomError{
 			Message: "User not found",
 			Code:    404,
 			Err:     errors.New("user not found"),
 		}
 	}
 
-	return dbUser, nil
+	token, err := utils.GenerateToken(dbUser.ID.String())
+
+	if err != nil {
+		return "", &utils.CustomError{
+			Message: "Error generating token",
+			Code:    500,
+			Err:     err,
+		}
+	}
+
+	return token, nil
+
 }
 
 func (s *service) Delete(ctx *gin.Context, id string) error {

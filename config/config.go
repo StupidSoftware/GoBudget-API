@@ -4,20 +4,22 @@ import (
 	"fmt"
 
 	"github.com/go-playground/validator/v10"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
 var (
-	db     *pgxpool.Pool
-	logger *Logger
-	cfg    *conf
-	v      *validator.Validate
+	db        *pgxpool.Pool
+	logger    *Logger
+	env       *conf
+	v         *validator.Validate
+	tokenAuth *jwt.Token
 )
 
 func Init() error {
 	var err error
 
-	cfg, err = InitEnv(".")
+	env, err = InitEnv(".")
 	if err != nil {
 		return fmt.Errorf("error initializing config: %v", err)
 	}
@@ -28,12 +30,13 @@ func Init() error {
 	}
 
 	v = NewValidator()
+	tokenAuth = initJWT()
 
 	return nil
 }
 
 func GetEnv() *conf {
-	return cfg
+	return env
 }
 
 func GetLogger(prefix string) *Logger {
@@ -47,4 +50,8 @@ func GetDB() *pgxpool.Pool {
 
 func GetValidator() *validator.Validate {
 	return v
+}
+
+func GetTokenAuth() *jwt.Token {
+	return tokenAuth
 }
