@@ -15,6 +15,12 @@ func initializeRoutes(r *gin.Engine) {
 		userRoutes(v1)
 		categoryRoutes(v1)
 		transactionRoutes(v1)
+
+		v1.GET("/health", func(c *gin.Context) {
+			c.JSON(200, gin.H{
+				"message": "OK",
+			})
+		})
 	}
 }
 
