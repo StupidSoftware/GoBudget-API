@@ -31,6 +31,15 @@ func NewCustomPGError(message string, code int, err error) *CustomError {
 		}
 	}
 
+	var pgErr *pgconn.PgError
+	if errors.As(err, &pgErr) {
+		return &CustomError{
+			Message: pgErr.Detail,
+			Code:    400,
+			Err:     err,
+		}
+	}
+
 	return &CustomError{
 		Message: err.Error(),
 		Code:    400,
