@@ -3,7 +3,7 @@ package model
 import "github.com/google/uuid"
 
 type Category struct {
-	ID     int
+	ID     uuid.UUID
 	Name   string
-	UserID uuid.UUID
+	UserID *uuid.UUID
 }
