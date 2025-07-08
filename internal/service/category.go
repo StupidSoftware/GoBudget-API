@@ -27,6 +27,18 @@ func NewCategoryService(repo repository.CategoryRepository) *categoryService {
 
 func (c *categoryService) Create(ctx *gin.Context, category *model.Category) *utils.CustomError {
 	category.ID = uuid.New()
+	userID, ok := ctx.Get("user_id")
+
+	if !ok {
+		return &utils.CustomError{
+			Message: "user id is required",
+			Code:    400,
+			Err:     errors.New("user id is required"),
+		}
+	}
+
+	parsedUserID := uuid.MustParse(userID.(string))
+	category.UserID = &parsedUserID
 
 	exists, err := c.repo.CategoryAlreadyExists(ctx, category)
 

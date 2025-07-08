@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"time"
+
 	"github.com/breno5g/GoBudget/internal/model"
 	"github.com/gin-gonic/gin"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -65,10 +67,16 @@ func (t *transactionRepository) GetByUserID(ctx *gin.Context, userID string) ([]
 
 	for rows.Next() {
 		var transaction model.Transaction
-		err := rows.Scan(&transaction.ID, &transaction.UserID, &transaction.CategoryID, &transaction.Description, &transaction.Amount, &transaction.Type, &transaction.Date, &transaction.CreatedAt)
+		var transactionType string
+		var transactionDate time.Time
+
+		err := rows.Scan(&transaction.ID, &transaction.UserID, &transaction.CategoryID, &transaction.Description, &transaction.Amount, &transactionType, &transactionDate, &transaction.CreatedAt)
 		if err != nil {
 			return nil, err
 		}
+
+		transaction.Type.UnmarshalJSON([]byte(transactionType))
+		transaction.Date.Time = transactionDate
 
 		transactions = append(transactions, &transaction)
 	}

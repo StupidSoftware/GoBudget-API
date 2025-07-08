@@ -67,6 +67,7 @@ func transactionRoutes(r *gin.RouterGroup) *gin.RouterGroup {
 		transactions.Use(middleware.AuthRequired())
 		{
 			transactions.POST("/", ctrl.Create)
+			transactions.GET("/", ctrl.GetByUserID)
 		}
 	}
 

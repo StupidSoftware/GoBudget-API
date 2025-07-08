@@ -12,6 +12,7 @@ import (
 
 type TransactionService interface {
 	Create(ctx *gin.Context, transaction *model.Transaction) *utils.CustomError
+	GetByUserID(ctx *gin.Context) ([]*model.Transaction, *utils.CustomError)
 }
 
 type transactionService struct {
@@ -43,4 +44,27 @@ func (t *transactionService) Create(ctx *gin.Context, transaction *model.Transac
 	}
 
 	return nil
+}
+
+func (t *transactionService) GetByUserID(ctx *gin.Context) ([]*model.Transaction, *utils.CustomError) {
+	userID, ok := ctx.Get("user_id")
+
+	if !ok {
+		return nil, &utils.CustomError{
+			Message: "user id is required",
+			Code:    400,
+			Err:     errors.New("user id is required"),
+		}
+	}
+
+	transactions, err := t.repo.GetByUserID(ctx, userID.(string))
+	if err != nil {
+		return nil, &utils.CustomError{
+			Message: err.Error(),
+			Code:    500,
+			Err:     err,
+		}
+	}
+
+	return transactions, nil
 }

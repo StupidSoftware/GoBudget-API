@@ -44,12 +44,12 @@ func (t TransactionType) String() string {
 }
 
 type Transaction struct {
-	ID          uuid.UUID       `json:"id"`
-	UserID      uuid.UUID       `json:"user_id"`
-	CategoryID  uuid.UUID       `json:"category_id"`
-	Description string          `json:"description" validate:"required,min=3,max=255" binding:"required"`
-	Amount      int64           `json:"amount" validate:"required,gt=0" binding:"required"`
-	Type        TransactionType `json:"type" validate:"required,oneof=income expense" binding:"required"`
-	Date        utils.Date      `json:"date" validate:"required" binding:"required"`
-	CreatedAt   time.Time       `json:"created_at"`
+	ID          uuid.UUID        `json:"id"`
+	UserID      uuid.UUID        `json:"user_id"`
+	CategoryID  uuid.UUID        `json:"category_id"`
+	Description string           `json:"description" validate:"required,min=3,max=255" binding:"required"`
+	Amount      int64            `json:"amount" validate:"required,gt=0" binding:"required"`
+	Type        *TransactionType `json:"type" validate:"required" binding:"required"`
+	Date        utils.Date       `json:"date" validate:"required" binding:"required"`
+	CreatedAt   time.Time        `json:"created_at"`
 }

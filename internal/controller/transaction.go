@@ -8,6 +8,7 @@ import (
 
 type TransactionController interface {
 	Create(ctx *gin.Context)
+	GetByUserID(ctx *gin.Context)
 }
 
 type transactionController struct {
@@ -31,6 +32,8 @@ func (t *transactionController) Create(ctx *gin.Context) {
 		return
 	}
 
+	logger.Debugf("Transaction: %+v", transaction)
+
 	if err := t.svc.Create(ctx, &transaction); err != nil {
 		logger.Errorf("Error creating transaction: %v", err)
 		ctx.JSON(err.Code, err)
@@ -40,4 +43,15 @@ func (t *transactionController) Create(ctx *gin.Context) {
 	ctx.JSON(201, gin.H{
 		"message": "Transaction created",
 	})
+}
+
+func (t *transactionController) GetByUserID(ctx *gin.Context) {
+	transactions, err := t.svc.GetByUserID(ctx)
+	if err != nil {
+		logger.Errorf("Error getting transactions: %v", err)
+		ctx.JSON(err.Code, err)
+		return
+	}
+
+	ctx.JSON(200, transactions)
 }

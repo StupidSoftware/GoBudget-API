@@ -29,8 +29,7 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "name": "bebida",
-  "user_id": "83472519-c1d1-49a6-8738-d1b33515d3b6"
+  "name": "Pagamento"
 }
 
 ### Get Categories
@@ -48,10 +47,16 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "category_id": "f211135d-41c3-43b9-9124-d4bc98c2c2dd",
-  "description": "teste",
-  "amount": 100,
+  "category_id": "ae2d6229-49a0-428f-bbb6-e676129c3359",
+  "description": "Pagamento Sizebay",
+  "amount": 536500,
   "type": "income",
-  "date": "2024-01-01T00:00:00Z"
+  "date": "2025-06-30"
 }
 
+
+### Get Transactions
+# @name get_transactions
+GET {{baseUrl}}/transactions
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.token}}
