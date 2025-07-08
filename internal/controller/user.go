@@ -57,6 +57,17 @@ func (c *controller) Create(ctx *gin.Context) {
 	})
 }
 
+// @Summary Login
+// @Tags User
+// @Description Login
+// @Accept json
+// @Produce json
+// @Param user body model.User true "User"
+// @Success 200 {object} model.User
+// @Failure 400 {object} utils.CustomError
+// @Failure 404 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /users/login [get]
 func (c *controller) Login(ctx *gin.Context) {
 	var user model.User
 

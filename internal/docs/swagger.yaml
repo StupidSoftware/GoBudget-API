@@ -62,4 +62,38 @@ paths:
       summary: Create a new user
       tags:
       - User
+  /users/login:
+    get:
+      consumes:
+      - application/json
+      description: Login
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Login
+      tags:
+      - User
 swagger: "2.0"
