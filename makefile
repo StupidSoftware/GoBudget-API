@@ -1,6 +1,6 @@
 include .env
 
-.PHONY: run build test lint clean env dev logs logs-api logs-db migrate-up migrate-down migrate-force migrate-version migrate-create
+.PHONY: run build test lint clean env dev logs logs-api logs-db migrate-up migrate-down migrate-force migrate-version migrate-create docs
 .ALL: run
 
 APP_NAME=GoBudget
@@ -16,6 +16,10 @@ run:
 build:
 	@echo ">> Building $(APP_NAME)..."
 	@go build -o $(OUT_DIR)/$(APP_NAME) $(CMD_DIR)/main.go
+
+docs:
+	@echo ">> Generating docs..."
+	@swag init -g $(CMD_DIR)/main.go -o internal/docs
 
 test:
 	@echo ">> Running tests..."

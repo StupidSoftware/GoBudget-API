@@ -25,6 +25,17 @@ func NewUserController(svc service.UserService) *controller {
 	}
 }
 
+// @Summary Create a new user
+// @Tags User
+// @Description Create a new user
+// @Accept json
+// @Produce json
+// @Param user body model.User true "User"
+// @Success 201 {object} model.User
+// @Failure 400 {object} utils.CustomError
+// @Failure 409 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /users [post]
 func (c *controller) Create(ctx *gin.Context) {
 	var user model.User
 

@@ -3,13 +3,17 @@ package router
 import (
 	"github.com/breno5g/GoBudget/config"
 	"github.com/breno5g/GoBudget/internal/controller"
+	docs "github.com/breno5g/GoBudget/internal/docs"
 	"github.com/breno5g/GoBudget/internal/middleware"
 	"github.com/breno5g/GoBudget/internal/repository"
 	"github.com/breno5g/GoBudget/internal/service"
 	"github.com/gin-gonic/gin"
+	swaggerfiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 func initializeRoutes(r *gin.Engine) {
+	docs.SwaggerInfo.BasePath = "/api/v1"
 	v1 := r.Group("/api/v1")
 	{
 		userRoutes(v1)
@@ -21,6 +25,9 @@ func initializeRoutes(r *gin.Engine) {
 				"message": "OK",
 			})
 		})
+
+		v1.GET("/docs/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+
 	}
 }
 

@@ -2,6 +2,7 @@ package server
 
 import (
 	"github.com/breno5g/GoBudget/config"
+	_ "github.com/breno5g/GoBudget/internal/docs"
 	"github.com/breno5g/GoBudget/internal/router"
 )
 

@@ -1,0 +1,65 @@
+definitions:
+  model.User:
+    properties:
+      balance:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: string
+      password:
+        type: string
+      username:
+        maxLength: 20
+        minLength: 3
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  utils.CustomError:
+    properties:
+      code:
+        type: integer
+      error: {}
+      message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /users:
+    post:
+      consumes:
+      - application/json
+      description: Create a new user
+      parameters:
+      - description: User
+        in: body
+        name: user
+        required: true
+        schema:
+          $ref: '#/definitions/model.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.User'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      summary: Create a new user
+      tags:
+      - User
+swagger: "2.0"
