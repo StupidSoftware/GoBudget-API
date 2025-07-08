@@ -8,7 +8,7 @@ import (
 
 type TransactionRepository interface {
 	Create(ctx *gin.Context, transaction *model.Transaction) error
-	// GetByUserID(ctx *gin.Context, userID string) ([]*model.Transaction, error)
+	GetByUserID(ctx *gin.Context, userID string) ([]*model.Transaction, error)
 	// Update(ctx *gin.Context, transaction *model.Transaction) error
 	// Delete(ctx *gin.Context, id string) error
 }
@@ -50,4 +50,28 @@ func (t *transactionRepository) Create(ctx *gin.Context, transaction *model.Tran
 	}
 
 	return nil
+}
+
+func (t *transactionRepository) GetByUserID(ctx *gin.Context, userID string) ([]*model.Transaction, error) {
+	var transactions []*model.Transaction
+
+	rows, err := t.db.Query(ctx, "SELECT id, user_id, category_id, description, amount, type, date, created_at FROM transactions WHERE user_id = $1", userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer rows.Close()
+
+	for rows.Next() {
+		var transaction model.Transaction
+		err := rows.Scan(&transaction.ID, &transaction.UserID, &transaction.CategoryID, &transaction.Description, &transaction.Amount, &transaction.Type, &transaction.Date, &transaction.CreatedAt)
+		if err != nil {
+			return nil, err
+		}
+
+		transactions = append(transactions, &transaction)
+	}
+
+	return transactions, nil
 }
