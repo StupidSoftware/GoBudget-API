@@ -6,6 +6,19 @@ import (
 	"github.com/breno5g/GoBudget/internal/router"
 )
 
+// @title GoBudget API
+// @version 1.0
+// @description API for GoBudget
+// @termsOfService http://swagger.io/terms/
+// @contact.name Breno Santos
+// @contact.email brenosantos@breno5g.dev
+// @license.name MIT
+// @license.url https://opensource.org/licenses/MIT
+// @host localhost:3333
+// @BasePath /api/v1
+// @securityDefinitions.apikey BearerAuth
+// @in header
+// @name Authorization
 func Execute() {
 	err := config.Init()
 	logger := config.GetLogger("main")

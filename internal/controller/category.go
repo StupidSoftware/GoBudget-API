@@ -21,6 +21,17 @@ func NewCategoryController(svc service.CategoryService) *categoryController {
 	}
 }
 
+// @Summary Create a new category
+// @Tags Category
+// @Description Create a new category
+// @Security BearerAuth
+// @Accept json
+// @Param category body model.Category true "Category"
+// @Success 201 {object} model.Category
+// @Failure 400 {object} utils.CustomError
+// @Failure 409 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /categories [post]
 func (c *categoryController) Create(ctx *gin.Context) {
 	var category model.Category
 
@@ -43,6 +54,16 @@ func (c *categoryController) Create(ctx *gin.Context) {
 	})
 }
 
+// @Summary Get all categories
+// @Tags Category
+// @Description Get all categories
+// @Accept json
+// @Security BearerAuth
+// @Produce json
+// @Success 200 {array} model.Category
+// @Failure 400 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /categories [get]
 func (c *categoryController) GetByUserID(ctx *gin.Context) {
 	categories, err := c.svc.GetByUserID(ctx)
 	if err != nil {

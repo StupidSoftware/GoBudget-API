@@ -1,4 +1,18 @@
+basePath: /api/v1
 definitions:
+  model.Category:
+    properties:
+      id:
+        type: string
+      name:
+        maxLength: 46
+        minLength: 3
+        type: string
+      user_id:
+        type: string
+    required:
+    - name
+    type: object
   model.User:
     properties:
       balance:
@@ -25,9 +39,79 @@ definitions:
       message:
         type: string
     type: object
+host: localhost:3333
 info:
-  contact: {}
+  contact:
+    email: brenosantos@breno5g.dev
+    name: Breno Santos
+  description: API for GoBudget
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: http://swagger.io/terms/
+  title: GoBudget API
+  version: "1.0"
 paths:
+  /categories:
+    get:
+      consumes:
+      - application/json
+      description: Get all categories
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Category'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      security:
+      - BearerAuth: []
+      summary: Get all categories
+      tags:
+      - Category
+    post:
+      consumes:
+      - application/json
+      description: Create a new category
+      parameters:
+      - description: Category
+        in: body
+        name: category
+        required: true
+        schema:
+          $ref: '#/definitions/model.Category'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Category'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      security:
+      - BearerAuth: []
+      summary: Create a new category
+      tags:
+      - Category
   /users:
     post:
       consumes:
@@ -96,4 +180,9 @@ paths:
       summary: Login
       tags:
       - User
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
 swagger: "2.0"
