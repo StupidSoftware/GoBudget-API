@@ -75,7 +75,10 @@ func (t *transactionRepository) GetByUserID(ctx *gin.Context, userID string) ([]
 			return nil, err
 		}
 
-		transaction.Type.UnmarshalJSON([]byte(transactionType))
+		var transactionTypeValue model.TransactionType
+
+		transactionTypeValue.UnmarshalJSON([]byte(transactionType))
+		transaction.Type = &transactionTypeValue
 		transaction.Date.Time = transactionDate
 
 		transactions = append(transactions, &transaction)

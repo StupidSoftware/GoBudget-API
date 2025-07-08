@@ -29,7 +29,7 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "name": "Pagamento"
+  "name": "Bebidas"
 }
 
 ### Get Categories
@@ -47,11 +47,11 @@ Content-Type: application/json
 Authorization: Bearer {{login.response.body.token}}
 
 {
-  "category_id": "ae2d6229-49a0-428f-bbb6-e676129c3359",
-  "description": "Pagamento Sizebay",
-  "amount": 536500,
-  "type": "income",
-  "date": "2025-06-30"
+  "category_id": "619d22f7-f998-4a15-b81e-71c4f4123691",
+  "description": "Coquinha geladinha 2",
+  "amount": 450,
+  "type": "expense",
+  "date": "2025-07-07"
 }
 
 
