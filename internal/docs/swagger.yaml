@@ -13,6 +13,41 @@ definitions:
     required:
     - name
     type: object
+  model.Transaction:
+    properties:
+      amount:
+        type: integer
+      category_id:
+        type: string
+      created_at:
+        type: string
+      date:
+        $ref: '#/definitions/utils.Date'
+      description:
+        maxLength: 255
+        minLength: 3
+        type: string
+      id:
+        type: string
+      type:
+        $ref: '#/definitions/model.TransactionType'
+      user_id:
+        type: string
+    required:
+    - amount
+    - category_id
+    - date
+    - description
+    - type
+    type: object
+  model.TransactionType:
+    enum:
+    - 0
+    - 1
+    type: integer
+    x-enum-varnames:
+    - Income
+    - Expense
   model.User:
     properties:
       balance:
@@ -37,6 +72,11 @@ definitions:
         type: integer
       error: {}
       message:
+        type: string
+    type: object
+  utils.Date:
+    properties:
+      time.Time:
         type: string
     type: object
 host: localhost:3333
@@ -112,6 +152,62 @@ paths:
       summary: Create a new category
       tags:
       - Category
+  /transactions:
+    get:
+      consumes:
+      - application/json
+      description: Get all transactions
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/model.Transaction'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      security:
+      - BearerAuth: []
+      summary: Get all transactions
+      tags:
+      - Transaction
+    post:
+      consumes:
+      - application/json
+      description: Create a new transaction
+      parameters:
+      - description: Transaction
+        in: body
+        name: transaction
+        required: true
+        schema:
+          $ref: '#/definitions/model.Transaction'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/model.Transaction'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.CustomError'
+      security:
+      - BearerAuth: []
+      summary: Create a new transaction
+      tags:
+      - Transaction
   /users:
     post:
       consumes:

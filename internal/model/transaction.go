@@ -46,7 +46,7 @@ func (t TransactionType) String() string {
 type Transaction struct {
 	ID          uuid.UUID        `json:"id"`
 	UserID      uuid.UUID        `json:"user_id"`
-	CategoryID  uuid.UUID        `json:"category_id"`
+	CategoryID  uuid.UUID        `json:"category_id" validate:"required" binding:"required"`
 	Description string           `json:"description" validate:"required,min=3,max=255" binding:"required"`
 	Amount      int64            `json:"amount" validate:"required,gt=0" binding:"required"`
 	Type        *TransactionType `json:"type" validate:"required" binding:"required"`

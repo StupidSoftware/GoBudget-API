@@ -21,6 +21,16 @@ func NewTransactionController(svc service.TransactionService) *transactionContro
 	}
 }
 
+// @Summary Create a new transaction
+// @Tags Transaction
+// @Description Create a new transaction
+// @Security BearerAuth
+// @Accept json
+// @Param transaction body model.Transaction true "Transaction"
+// @Success 201 {object} model.Transaction
+// @Failure 400 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /transactions [post]
 func (t *transactionController) Create(ctx *gin.Context) {
 	var transaction model.Transaction
 
@@ -45,6 +55,16 @@ func (t *transactionController) Create(ctx *gin.Context) {
 	})
 }
 
+// @Summary Get all transactions
+// @Tags Transaction
+// @Description Get all transactions
+// @Security BearerAuth
+// @Accept json
+// @Produce json
+// @Success 200 {array} model.Transaction
+// @Failure 400 {object} utils.CustomError
+// @Failure 500 {object} utils.CustomError
+// @Router /transactions [get]
 func (t *transactionController) GetByUserID(ctx *gin.Context) {
 	transactions, err := t.svc.GetByUserID(ctx)
 	if err != nil {
